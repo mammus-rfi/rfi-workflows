@@ -1,4 +1,5 @@
-name: CI
+# .github/workflows/CI.yml
+name: Reusable CI
 
 on:
   workflow_call:
@@ -6,26 +7,14 @@ on:
       branch:
         required: true
         type: string
-      runner:
-        required: false
-        type: string
-        default: "ubuntu-latest"
 
 jobs:
   ci:
-    runs-on: ${{ inputs.runner }}
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout do Código
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Instalar Dependências
+      - name: Run CI
         run: |
-          echo "Rodando CI em: ${{ inputs.branch }}"
-
-      - name: Executar Testes
-        run: |
-          echo "Rodando testes em: ${{ inputs.branch }}"
-
-      - name: Executar Build
-        run: |
-          echo "Rodando build em: ${{ inputs.branch }}"
+          echo "Running CI for branch: ${{ inputs.branch }}"
