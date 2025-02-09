@@ -38,15 +38,3 @@ jobs:
         run: |
           echo "Runnnig CI DEVELOP!"
 
-  ci-feature:
-    if: contains(github.ref, 'refs/heads/feature/')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Run CI for feature branches
-        run: |
-          echo "Running CI for a feature branch"
-
-
