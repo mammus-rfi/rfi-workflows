@@ -15,6 +15,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run CI
+      - name: Detect technology
+        uses: mammus-rfi/rfi-workflows/detect-technology@v1
+
+      - name: Run Node.js CI
+        if: env.TECHNOLOGY == 'nodejs'
         run: |
+          echo "Running Node.js CI"
           echo "Running CI for branch: ${{ inputs.branch }}"
+          npm install
+          npm test
+
+      - name: Run Python CI
+        if: env.TECHNOLOGY == 'python'
+        run: |
+          echo "Running Python CI"
+          echo "Running CI for branch: ${{ inputs.branch }}"
+          pip install -r requirements.txt
+          pytest
+
+      - name: Run Java CI
+        if: env.TECHNOLOGY == 'java'
+        run: |
+          echo "Running Java CI"
+          echo "Running CI for branch: ${{ inputs.branch }}"
+          ./gradlew build
+          ./gradlew test
