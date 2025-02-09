@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Detect technology
-        uses: mammus-rfi/rfi-workflows/snippets/detect-technology@v1
+        uses: mammus-rfi/rfi-workflows/snippets/detect-technology@master
 
       - name: Run Node.js CI
         if: env.TECHNOLOGY == 'nodejs'
