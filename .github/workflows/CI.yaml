@@ -24,6 +24,11 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
+    - name: Set up Node.js 22
+      uses: actions/setup-node@v3
+      with:
+        node-version: 22.x
+
     - name: Detect technology
       id: detect-tech
       run: |
@@ -43,6 +48,8 @@ jobs:
       if: env.TECHNOLOGY == 'nodejs'
       run: |
         echo "Running Node.js commands"
+        yarn
+        yarn tauri build
 
 
     - name: Python CI
