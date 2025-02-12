@@ -38,30 +38,30 @@ jobs:
           echo "TECHNOLOGY=unknown" >> $GITHUB_ENV
         fi
 
-    - name: Run Node.js commands
+    - name: Node CI
       if: env.TECHNOLOGY == 'nodejs'
       run: |
         echo "Running Node.js commands"
 
 
-    - name: Run Python commands
+    - name: Python CI
       if: env.TECHNOLOGY == 'python'
       run: |
         echo "Running Python commands"
 
 
-    - name: Run Ruby commands
+    - name: Ruby CI
       if: env.TECHNOLOGY == 'ruby'
       run: |
         echo "Running Ruby commands"
 
-    - name: Run Ruby commands
+    - name: Java CI
       if: env.TECHNOLOGY == 'java'
       run: |
         echo "Running Java Commands"
 
-    - name: Handle unknown technology
+    - name: Trata tecnologia não identificada
       if: env.TECHNOLOGY == 'unknown'
       run: |
-        echo "Unknown technology detected"
+        echo "Tecnologia não identificada"
         exit 1
