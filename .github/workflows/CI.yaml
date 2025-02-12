@@ -53,7 +53,9 @@ jobs:
     - name: Java CI
       if: env.TECHNOLOGY == 'java'
       run: |
-        echo "Running Java Commands"
+        echo "Iniciando compilação Java..."
+        mvn clean package
+        mvn test
 
     - name: Trata tecnologia não identificada
       if: env.TECHNOLOGY == 'unknown'
