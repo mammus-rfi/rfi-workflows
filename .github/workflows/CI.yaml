@@ -1,46 +1,60 @@
-# .github/workflows/CI.yml
-name: Reusable CI
+name: CI Pipeline
 
 on:
-  workflow_call:
-    inputs:
-      branch:
-        required: true
-        type: string
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  ci:
+  detect-and-run:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Detect technology
-        uses: mammus-rfi/rfi-workflows/snippets/detect-technology@master
+    - name: Detect technology
+      id: detect-tech
+      run: |
+        if [ -f "package.json" ]; then
+          echo "TECHNOLOGY=nodejs" >> $GITHUB_ENV
+        elif [ -f "requirements.txt" ]; then
+          echo "TECHNOLOGY=python" >> $GITHUB_ENV
+        elif [ -f "Gemfile" ]; then
+          echo "TECHNOLOGY=ruby" >> $GITHUB_ENV
+        elif [ -f "pom.xml" ]; then
+          echo "TECHNOLOGY=java" >> $GITHUB_ENV
+        else
+          echo "TECHNOLOGY=unknown" >> $GITHUB_ENV
+        fi
 
-      - name: Run Node.js CI
-        if: env.TECHNOLOGY == 'nodejs'
-        run: |
-          echo "Running Node.js CI"
-          echo "Running CI for branch: ${{ inputs.branch }}"
-          npm install
-          npm test
+    - name: Run Node.js commands
+      if: env.TECHNOLOGY == 'nodejs'
+      run: |
+        echo "Running Node.js commands"
 
-      - name: Run Python CI
-        if: env.TECHNOLOGY == 'python'
-        run: |
-          echo "Running Python CI"
-          echo "Running CI for branch: ${{ inputs.branch }}"
-          pip install -r requirements.txt
-          pytest
 
-      - name: Run Java CI
-        if: env.TECHNOLOGY == 'java'
-        run: |
-          echo "Running Java CI"
-          echo "Running CI for branch: ${{ inputs.branch }}"
-          ./gradlew build
-          ./gradlew test
+    - name: Run Python commands
+      if: env.TECHNOLOGY == 'python'
+      run: |
+        echo "Running Python commands"
+
+
+    - name: Run Ruby commands
+      if: env.TECHNOLOGY == 'ruby'
+      run: |
+        echo "Running Ruby commands"
+
+    - name: Run Ruby commands
+      if: env.TECHNOLOGY == 'java'
+      run: |
+        echo "Running Java Commands"
+
+    - name: Handle unknown technology
+      if: env.TECHNOLOGY == 'unknown'
+      run: |
+        echo "Unknown technology detected"
+        exit 1
