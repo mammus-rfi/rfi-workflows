@@ -49,7 +49,7 @@ jobs:
       run: |
         echo "Running Node.js commands"
         yarn
-        yarn tauri build
+        yarn build
 
 
     - name: Python CI
