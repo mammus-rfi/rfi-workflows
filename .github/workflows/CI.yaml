@@ -70,8 +70,9 @@ jobs:
         MMS_DBAPILOGIN: ${{ vars.MMS_DBAPILOGIN}}      
       run: |
         echo "Iniciando compilação Java..."
-        mvn clean package
-        mvn test
+        mvn -D$MMS_DBSECRET clean package
+        ec
+        mvn -D$MMS_DBSECRET test
 
     - name: Trata tecnologia não identificada
       if: env.TECHNOLOGY == 'unknown'
