@@ -53,11 +53,11 @@ jobs:
 
     - name: Java CI
       if: env.TECHNOLOGY == 'java'
-        env:
-          MMS_DBSECRET: ${{ secrets.MMS_DBSECRET }}
-          MMS_DBUSER: ${{ vars.MMS_DBUSER }}      
-          MMS_DBURL: ${{ vars.MMS_DBURL }}
-          MMS_DBAPILOGIN: ${{ vars.MMS_DBAPILOGIN}}      
+      env:
+        MMS_DBSECRET: ${{ secrets.MMS_DBSECRET }}
+        MMS_DBUSER: ${{ vars.MMS_DBUSER }}      
+        MMS_DBURL: ${{ vars.MMS_DBURL }}
+        MMS_DBAPILOGIN: ${{ vars.MMS_DBAPILOGIN}}      
       run: |
         echo "Iniciando compilação Java..."
         mvn clean package
