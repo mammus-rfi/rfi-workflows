@@ -51,20 +51,13 @@ jobs:
         yarn
         yarn tauri build
 
-
-    - name: Python CI
-      if: env.TECHNOLOGY == 'python'
-      run: |
-        echo "Running Python commands"
-
-
-    - name: Ruby CI
-      if: env.TECHNOLOGY == 'ruby'
-      run: |
-        echo "Running Ruby commands"
-
     - name: Java CI
       if: env.TECHNOLOGY == 'java'
+        env:
+          MMS_DBSECRET: ${{ secrets.MMS_DBSECRET }}
+          MMS_DBUSER: ${{ vars.MMS_DBUSER }}      
+          MMS_DBURL: ${{ vars.MMS_DBURL }}
+          MMS_DBAPILOGIN: ${{ vars.MMS_DBAPILOGIN}}      
       run: |
         echo "Iniciando compilação Java..."
         mvn clean package
