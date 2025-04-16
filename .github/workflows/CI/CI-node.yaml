@@ -1,0 +1,38 @@
+name: CI Pipeline
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  detect-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js 22
+      uses: actions/setup-node@v3
+      with:
+        node-version: 22.x
+
+    - name: Verifica existência do package.json
+      run: |
+        if [ -f "package.json" ]; then
+          echo "Pacote encontrado!"
+        else
+          echo "Arquivo package.json não encontrado, verifique sua aplicação."
+        exit 1
+
+    - name: Node CI
+      run: |
+        echo "Running Node.js commands"
+        yarn
+        yarn build

@@ -1,0 +1,40 @@
+name: CI Pipeline
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  detect-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v3
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: 'maven'
+
+    - name: Verifica existência do package.json
+      run: |
+        if [ -f "pom.xml" ]; then
+          echo "Pacote encontrado!"
+        else
+          echo "Arquivo pom.xml não encontrado, verifique sua aplicação."
+        exit 1
+
+    - name: Java CI
+      run: |
+        echo "Iniciando compilação Java..."
+        mvn clean package
+        mvn test
