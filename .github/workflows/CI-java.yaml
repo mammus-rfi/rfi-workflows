@@ -1,4 +1,4 @@
-name: Java CI Pipeline
+name: Pipeline CI Java
 
 on:
   workflow_call:
@@ -6,63 +6,70 @@ on:
       branch:
         required: true
         type: string
-        description: "Branch to run the CI pipeline on"
+        description: "Branch para executar o pipeline"
   
   workflow_dispatch:
     inputs:
       branch:
-        description: "Branch to run the CI pipeline on"
+        description: "Branch para executar o pipeline"
         required: false
         default: "main"
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 30  # Evita jobs travados
 
     steps:
-      - name: Checkout code
+      # 1. Baixa o código
+      - name: Checkout do código
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Needed for proper commit hash in cache key
+          fetch-depth: 0  # Necessário para cache preciso
 
-      - name: Set up JDK 21
+      # 2. Configura o Java
+      - name: Configurar JDK 21
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: 'maven'  # Automatic Maven dependency caching
+          cache: 'maven'  # Cache automático das dependências
 
-      - name: Validate project structure
+      # 3. Valida se é projeto Maven
+      - name: Validar estrutura do projeto
         id: validate
         run: |
           if [ ! -f "pom.xml" ]; then
-            echo "::error::pom.xml not found! This doesn't appear to be a Maven project."
+            echo "::error::Arquivo pom.xml não encontrado! Verifique se é um projeto Maven."
             exit 1
           fi
-          echo "Maven project detected"
+          echo "Projeto Maven detectado"
 
-      - name: Cache Maven dependencies
+      # 4. Cache para acelerar builds futuros
+      - name: Cache de dependências Maven
         uses: actions/cache@v3
         with:
           path: |
-            ~/.m2/repository
-            target/
+            ~/.m2/repository  # Onde o Maven armazena dependências
+            target/          # Pasta de build
           key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             maven-${{ runner.os }}-
 
-      - name: Build with Maven
-        run: mvn clean package -DskipTests
+      # 5. Compilação
+      - name: Compilar com Maven
+        run: mvn clean package -DskipTests  # Compila sem rodar testes
 
-      - name: Run tests
+      # 6. Testes
+      - name: Executar testes
         run: mvn test
 
-      - name: Upload test results
-        if: always()  # Upload even if tests fail
+      # 7. Relatórios (mesmo se falhar)
+      - name: Upload de resultados de teste
+        if: always()  # Executa mesmo se testes falharem
         uses: actions/upload-artifact@v3
         with:
           name: test-results
           path: |
-            **/target/surefire-reports
-            **/target/failsafe-reports
+            **/target/surefire-reports  # Relatórios JUnit
+            **/target/failsafe-reports  # Relatórios de integração
